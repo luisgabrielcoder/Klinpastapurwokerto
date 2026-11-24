@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KlinPasta Keliling | Servis laptop, PC, dan konsol ke rumah di Purwokerto</title>
+<meta name="description" content="Bersih debu dan ganti thermal paste langsung di rumah Anda di Purwokerto. Harga paket jelas, garansi layanan 7 hari.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:,">
+<style>
+/*
+  Design Read: layanan servis ke rumah untuk warga Purwokerto, bahasa visual halaman produk ala Apple
+  (diminta pemilik, jadi R-30 mengizinkan), dial ENERGY 2 / RHYTHM 3 / MOTION 2.
+
+  Alasan keputusan:
+  - Warna: hijau tua nyaris hitam (dasar gelap), hijau merek (aksi dan label), netral putih-hijau. Satu aksen kuning
+    diambil dari kuas di logo dan hanya dipakai untuk lapisan pasta dan tombol utama di atas latar gelap.
+  - Tipografi: font sistem. Terasa asli di Apple dan Windows, nol permintaan font, tidak ada skrip pemblokir render.
+  - Motif identitas: lapisan pasta kuning. Muncul di diagram hero, penanda angka, dan tombol di atas latar gelap.
+  - Bentuk: pil hanya untuk tombol utama. Panel 28px, baris dan input 12px. Tanpa bayangan: pemisah memakai garis tipis.
+  - Kaca (blur): hanya header. Tidak ada glow, orb, atau gradasi dekoratif.
+  - Gerak: diagram hero terurai sekali saat dimuat (menunjukkan isi perangkat), blok besar muncul pelan saat discroll.
+    Tidak ada gerak berulang. Semua berhenti di prefers-reduced-motion.
+  - Tema: mengikuti pengaturan perangkat (terang atau gelap), kedua mode diuji.
+*/
+:root{
+  color-scheme:light dark;
+  --bg:#f6faf7; --surface:#ffffff; --tint:#e8f1ec;
+  --fg:#0c1f18; --muted:#41564c; --line:#cad9d0; --edge:#6a8176;
+  --brand:#0b7a5d; --brand-ink:#09644b;
+  --deep:#0b1f19; --on-deep:#eef7f2; --muted-deep:#a6c0b4; --line-deep:rgba(238,247,242,.2);
+  --accent:#ffb020; --accent-ink:#241700;
+  --btn:#0b1f19; --btn-ink:#ffffff; --btn-hover:#1f4639;
+  --focus:#0b7a5d;
+  --err:#b3261e; --ok:#09644b;
+  --bubble:#0b6b52; --bubble-ink:#ffffff;
+  --nav-bg:rgba(246,250,247,.84);
+  --r-sm:12px; --r-md:16px; --r-lg:28px;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI Variable Display","Segoe UI Variable","Segoe UI",Roboto,"Helvetica Neue",Arial,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#08130f; --surface:#0f201a; --tint:#0c1a15;
+    --fg:#e8f3ed; --muted:#a4bbae; --line:#243a30; --edge:#6f8a7d;
+    --brand:#3ccf9f; --brand-ink:#3ccf9f;
+    --deep:#12281f; --on-deep:#eef7f2; --muted-deep:#a6c0b4; --line-deep:rgba(238,247,242,.18);
+    --btn:#ffb020; --btn-ink:#241700; --btn-hover:#ffc24d;
+    --focus:#ffb020;
+    --err:#ff9a90; --ok:#5fe0a8;
+    --bubble:#17604a; --bubble-ink:#ffffff;
+    --nav-bg:rgba(8,19,15,.82);
+  }
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:72px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,ul,ol,dl,dd,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+h1,h2,h3{text-wrap:balance;font-weight:700}
+a{color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* interaksi: kursor dan fokus diatur sekali di lapisan dasar */
+a[href],button,summary,select,label[for],[role="button"]{cursor:pointer}
+button:disabled,select:disabled,input:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px;border-radius:6px}
+
+.wrap{max-width:1120px;margin-inline:auto;
+  padding-left:max(clamp(20px,5vw,48px),env(safe-area-inset-left,0px));
+  padding-right:max(clamp(20px,5vw,48px),env(safe-area-inset-right,0px))}
+.band{padding-block:var(--pad,clamp(64px,9vw,104px))}
+.tint{background:var(--tint)}
+.deep{background:var(--deep);color:var(--on-deep);
+  --muted:var(--muted-deep);--line:var(--line-deep);--focus:var(--accent);--brand-ink:var(--accent);
+  --btn:var(--accent);--btn-ink:var(--accent-ink);--btn-hover:#ffc24d}
+.muted{color:var(--muted)}
+
+h2{font-size:clamp(2rem,4.8vw,3.5rem);line-height:1.05;letter-spacing:-.035em}
+h3{font-size:1.3rem;line-height:1.2;letter-spacing:-.02em}
+.lead{font-size:clamp(1.0625rem,1.8vw,1.3125rem);line-height:1.45;color:var(--muted);max-width:36em}
+.sec-head{display:grid;gap:14px;margin-bottom:clamp(32px,5vw,56px)}
+.sec-head .lead{margin-top:2px}
+
+/* tombol: pil hanya untuk aksi utama */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border:0;border-radius:999px;
+  background:var(--btn);color:var(--btn-ink);font:600 16px/1 var(--font);text-decoration:none;text-align:center;
+  transition:background-color .15s ease,transform .15s ease}
+.btn:hover{background:var(--btn-hover);transform:translateY(-1px)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn:disabled{opacity:.45;transform:none;text-decoration:line-through}
+.btn.sm{min-height:44px;padding:0 20px;font-size:14px}
+.btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--edge)}
+.btn.ghost:hover{background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.deep .btn.ghost{color:var(--on-deep);box-shadow:inset 0 0 0 1.5px rgba(238,247,242,.5)}
+.deep .btn.ghost:hover{background:rgba(255,255,255,.1)}
+.tlink{color:var(--brand-ink);font-weight:600;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1.5px;
+  display:inline-flex;align-items:center;min-height:48px}
+.tlink:hover{text-decoration-thickness:3px}
+
+/* header: satu-satunya elemen kaca */
+header.top{position:sticky;top:0;z-index:30;padding-top:env(safe-area-inset-top,0px);
+  background:var(--nav-bg);-webkit-backdrop-filter:saturate(160%) blur(18px);backdrop-filter:saturate(160%) blur(18px);
+  border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;height:56px}
+.logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;min-height:44px}
+.logo svg{width:30px;height:30px;flex:none}
+.logo .w{display:flex;flex-direction:column;line-height:1}
+.logo b{font-size:1.1rem;font-weight:800;letter-spacing:-.03em}
+.logo b i{font-style:normal;color:var(--brand-ink)}
+.logo small{font-size:.7rem;font-weight:600;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+.topnav{display:flex;align-items:center;gap:6px}
+.topnav a:not(.btn){display:inline-flex;align-items:center;min-height:44px;padding:0 12px;font-size:.875rem;color:var(--muted);text-decoration:none}
+.topnav a:not(.btn):hover{color:var(--fg);text-decoration:underline;text-underline-offset:5px}
+.topnav .btn{margin-left:8px}
+
+/* hero */
+.hero{--pad:clamp(40px,7vw,88px) 0 clamp(56px,8vw,96px)}
+.hero{padding-block:clamp(40px,7vw,88px) clamp(56px,8vw,96px)}
+h1{font-size:clamp(2.6rem,7.6vw,5.9rem);line-height:1.02;letter-spacing:-.045em}
+h1 span{color:var(--brand-ink)}
+.hero-row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,6vw,80px);align-items:end;margin-top:clamp(28px,4vw,48px)}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 28px;margin-top:28px}
+.facts li{padding:14px 0;border-top:1px solid var(--line);font-weight:600;font-size:1.0625rem}
+.facts li:last-child{border-bottom:1px solid var(--line)}
+
+.panel{margin-top:clamp(40px,6vw,72px);border-radius:var(--r-lg);border:1px solid var(--line-deep);
+  padding:clamp(24px,5vw,56px)}
+.panel h2{font-size:clamp(1.6rem,3.4vw,2.5rem);max-width:20em}
+.panel .lead{margin-top:12px;max-width:34em}
+.panel-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(24px,5vw,64px);align-items:center;margin-top:clamp(24px,4vw,40px)}
+.art-svg{display:block;width:100%;height:auto;color:var(--on-deep)}
+.art-svg .t{fill:var(--t)} .art-svg .lf{fill:var(--l)} .art-svg .rt{fill:var(--r)}
+.art-svg .l1{--t:#d4e6dd;--l:#a6c4b7;--r:#86ab9b}
+.art-svg .l2{--t:#ffb020;--l:#e39a0b;--r:#c07f00}
+.art-svg .l3{--t:#2e7d66;--l:#215c4a;--r:#18453a}
+.art-svg .fin{stroke:#7ea494;stroke-width:2;fill:none}
+.art-svg .die{fill:#15b88b}
+.art-svg .axis{stroke:currentColor;stroke-opacity:.4;stroke-width:2;stroke-dasharray:4 8}
+.art-svg .lead-line{stroke:currentColor;stroke-opacity:.55;stroke-width:2}
+.art-svg .mk circle{fill:none;stroke:currentColor;stroke-width:2.5}
+.art-svg .mk text{fill:currentColor;font:700 24px var(--font);text-anchor:middle}
+.art-svg .mk .hot circle{fill:var(--accent);stroke:var(--accent)}
+.art-svg .mk .hot text{fill:var(--accent-ink)}
+.parts{display:grid;gap:26px;counter-reset:part}
+.parts li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:16px;align-items:start;counter-increment:part}
+.parts li::before{content:counter(part);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+  border:2px solid currentColor;font-weight:700;font-size:.95rem}
+.parts li.hot::before{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.parts b{display:block;font-size:1.125rem;letter-spacing:-.01em;margin-bottom:4px}
+.parts span{color:var(--muted)}
+
+/* gerak diagram: urai sekali saat dimuat */
+@media (prefers-reduced-motion:no-preference){
+  .art-svg .l1,.art-svg .l2,.art-svg .l3{transition:transform 1s cubic-bezier(.22,1,.36,1) .25s}
+  .art-svg .mk{transition:opacity .5s ease .9s}
+  html.js .art:not(.go) .l1{transform:translateY(176px)}
+  html.js .art:not(.go) .l3{transform:translateY(-134px)}
+  html.js .art:not(.go) .mk{opacity:0}
+}
+
+/* layanan */
+.pkgs{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:20px;align-items:stretch}
+.pkg-main{border-radius:var(--r-lg);border:1px solid var(--line-deep);padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;gap:14px}
+.pkg-main .kicker{color:var(--brand-ink);font-weight:600;font-size:.95rem}
+.pkg-main h3{font-size:1.6rem}
+.price{font-weight:700;letter-spacing:-.04em;line-height:1}
+.pkg-main .price{font-size:clamp(3rem,6vw,4.5rem);margin:4px 0}
+.pkg-main ul{display:grid;gap:10px;color:var(--muted)}
+.pkg-main li{padding-left:22px;position:relative}
+.pkg-main li::before{content:"";position:absolute;left:0;top:.72em;width:10px;height:3px;background:var(--accent)}
+.pkg-main .save{border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:.95rem}
+.pkg-main .btn{align-self:flex-start;margin-top:auto}
+.pkg-list{border-top:1px solid var(--line)}
+.pkg-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 24px;align-items:center;padding:24px 4px;border-bottom:1px solid var(--line)}
+.pkg-list p{color:var(--muted);margin-top:6px;font-size:.98rem;max-width:30em}
+.pkg-list .pr{display:flex;align-items:center;gap:16px}
+.pkg-list .price{font-size:1.75rem}
+.note{margin-top:20px;font-size:.875rem;color:var(--muted);max-width:56em}
+
+.pay{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:clamp(20px,4vw,56px);margin-top:clamp(56px,8vw,88px);padding-top:28px;border-top:1px solid var(--line)}
+.paylist>div{display:grid;grid-template-columns:minmax(0,.55fr) minmax(0,1fr);gap:8px 20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.paylist>div:first-child{padding-top:0}
+.paylist dt{font-weight:600}
+.paylist dd{color:var(--muted)}
+
+/* cara kerja */
+.how{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(32px,6vw,80px);align-items:start}
+.how h3{margin-bottom:10px;font-size:1.5rem}
+.how .muted{max-width:30em}
+.chat{margin-top:24px;max-width:400px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);padding:18px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.chat small{align-self:center;color:var(--muted);font-size:.8rem;margin-bottom:4px}
+.bub{max-width:84%;padding:10px 15px;border-radius:20px;font-size:.95rem;line-height:1.4;overflow-wrap:anywhere}
+.bub.out{align-self:flex-end;background:var(--bubble);color:var(--bubble-ink);border-bottom-right-radius:6px}
+.bub.in{align-self:flex-start;background:var(--tint);border-bottom-left-radius:6px}
+.visit{margin-top:24px;counter-reset:v;border-top:1px solid var(--line)}
+.visit li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:8px 12px;padding:20px 0;border-bottom:1px solid var(--line);counter-increment:v}
+.visit li::before{content:counter(v);font-weight:700;font-size:1.5rem;letter-spacing:-.03em;color:var(--brand-ink);font-variant-numeric:tabular-nums;line-height:1.2}
+.visit b{display:block;font-size:1.15rem;letter-spacing:-.015em}
+.visit span{color:var(--muted)}
+
+/* manfaat */
+.big{font-size:clamp(2.4rem,6.6vw,5.2rem);line-height:1.02;letter-spacing:-.045em;max-width:13em}
+.ben{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px 28px;margin-top:clamp(40px,7vw,80px)}
+.ben>div{border-top:1px solid var(--line);padding-top:18px}
+.ben h3{font-size:1.2rem;margin-bottom:8px}
+.ben p{color:var(--muted)}
+
+/* area */
+.area{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,88px);align-items:start}
+.area .lead{margin-top:14px}
+.kec{margin-top:28px;border-top:1px solid var(--line)}
+.kec li{padding:14px 0;border-bottom:1px solid var(--line);font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:650;letter-spacing:-.025em}
+.care h3{font-size:1.5rem;margin-bottom:20px}
+.fact{padding:20px 0;border-top:1px solid var(--line);font-size:1.0625rem;color:var(--muted)}
+.fact b{display:block;color:var(--fg);font-size:clamp(2rem,4.4vw,3.2rem);line-height:1.05;letter-spacing:-.04em;margin-bottom:4px}
+.care .note{margin-top:8px}
+
+/* tanya jawab */
+.faq-wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,80px);align-items:start}
+.faq-wrap h2{position:sticky;top:88px}
+.faq{border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{display:flex;justify-content:space-between;align-items:center;gap:20px;min-height:64px;padding:12px 0;list-style:none;
+  font-size:1.15rem;font-weight:600;letter-spacing:-.015em}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;
+  box-shadow:inset 0 0 0 1.5px var(--edge);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"\2212"}
+summary:hover{text-decoration:underline;text-underline-offset:5px}
+details p{color:var(--muted);padding:0 52px 22px 0;max-width:40em}
+
+/* form */
+.order{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(20px,3vw,32px);align-items:start}
+form,.sumcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:clamp(20px,4vw,36px)}
+.sumcard{position:sticky;top:76px}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;min-width:0;border:0;padding:0;margin-inline:0}
+.f2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 14px}
+label,legend{font-size:.9rem;font-weight:600;color:var(--fg);padding:0}
+input,select,textarea{font:400 17px/1.3 var(--font);color:var(--fg);background:var(--bg);border:1.5px solid var(--edge);border-radius:var(--r-sm);
+  min-height:52px;padding:12px 14px;width:100%;min-width:0;-webkit-appearance:none;appearance:none;scroll-margin-top:90px;scroll-margin-bottom:130px}
+textarea{resize:vertical;min-height:84px}
+select{padding-right:42px;background-image:linear-gradient(45deg,transparent 50%,var(--fg) 50%),linear-gradient(135deg,var(--fg) 50%,transparent 50%);
+  background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+input:hover,select:hover,textarea:hover{border-color:var(--fg)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-color:var(--fg)}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--err);border-width:2px}
+.hint{font-size:.85rem;color:var(--muted)}
+.err{font-size:.875rem;color:var(--err);font-weight:600}
+.err::before{content:"Perlu diperbaiki: ";font-weight:700}
+.warn{font-size:.875rem;color:var(--fg);font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:var(--r-md);background:var(--tint);border:1.5px solid var(--edge)}
+.seg button{min-height:48px;border:0;border-radius:10px;background:transparent;color:var(--muted);font:600 15px var(--font)}
+.seg button:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.seg button[aria-pressed="true"]{background:var(--btn);color:var(--btn-ink)}
+.sumcard h3{font-size:1.4rem;margin-bottom:14px}
+.line{display:flex;justify-content:space-between;gap:16px;padding:8px 0}
+.line span:first-child{color:var(--muted)}
+.line.total{border-top:1.5px dashed var(--edge);margin-top:8px;padding-top:16px;font-size:1.6rem;font-weight:700;letter-spacing:-.03em}
+.line.total span:first-child{color:var(--fg)}
+.out-wrap{margin-top:22px}
+.out-wrap label{display:block;margin-bottom:8px}
+.out-bubble{background:var(--bubble);color:var(--bubble-ink);border-radius:22px 22px 6px 22px;padding:16px 18px}
+.out-bubble textarea{background:transparent;border:0;color:inherit;padding:0;min-height:250px;font-size:.9rem;line-height:1.5;border-radius:0;resize:none;overflow:hidden}
+::placeholder{color:var(--muted);opacity:1}
+.out-bubble textarea:focus-visible{outline-color:#fff}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.status{min-height:24px;margin-top:12px;font-size:.92rem;font-weight:600;color:var(--ok)}
+.status.is-err{color:var(--err)}
+.fill-hint{margin-top:10px;font-size:.88rem;color:var(--muted)}
+noscript p{padding:14px 0;font-weight:600}
+
+/* kontak */
+.contact{--pad:clamp(56px,8vw,88px)}
+.contact .wrap{display:flex;flex-wrap:wrap;gap:28px 40px;align-items:center;justify-content:space-between}
+.contact h2{font-size:clamp(2.2rem,5.5vw,4rem)}
+.contact p.muted{margin-top:12px;max-width:34em}
+.handle{margin-top:18px;font-size:1.5rem;font-weight:700;letter-spacing:-.02em;overflow-wrap:anywhere}
+.handle a{display:inline-flex;align-items:center;min-height:48px;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:6px;text-decoration-thickness:2px}
+.handle a:hover{text-decoration-thickness:4px}
+
+footer.bottom{padding-block:28px 40px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+footer.bottom .wrap{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between;align-items:center}
+footer.bottom .brand{display:inline-flex;align-items:center;gap:10px}
+footer.bottom svg{width:24px;height:24px}
+
+/* dock bawah di ponsel */
+.dock{display:none}
+body.typing .dock{display:none}
+
+/* gerak baca: blok besar muncul pelan, tidak berulang */
+@media (prefers-reduced-motion:no-preference){
+  html.js .rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1)}
+  html.js .rv.shown{opacity:1;transform:none}
+}
+@media print{html.js .rv{opacity:1!important;transform:none!important}}
+
+/* tablet: dua kolom diperlonggar sebelum menumpuk */
+@media (max-width:1024px){
+  .hero-row{grid-template-columns:minmax(0,1fr) minmax(0,.8fr)}
+  .topnav a:not(.btn){padding:0 8px}
+  .pkg-list li{grid-template-columns:minmax(0,1fr)}
+  .pkg-list .pr{justify-content:space-between}
+}
+@media (max-width:860px){
+  .hero-row,.panel-grid,.pkgs,.pay,.how,.area,.faq-wrap,.order{grid-template-columns:minmax(0,1fr)}
+  .pkg-list li{grid-template-columns:minmax(0,1fr) auto}
+  .faq-wrap h2{position:static}
+  .sumcard{position:static}
+  .panel-grid .art{max-width:520px;margin-inline:auto;width:100%}
+}
+@media (max-width:760px){
+  html{scroll-padding-top:64px}
+  .topnav{display:none}
+  .dock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;position:fixed;z-index:35;left:0;right:0;bottom:0;
+    padding:8px max(8px,env(safe-area-inset-right,0px)) calc(8px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));
+    background:var(--surface);border-top:1px solid var(--line)}
+  .dock a{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:var(--r-sm);text-decoration:none;
+    font-size:.8rem;font-weight:600;color:var(--muted);text-align:center;padding:0 4px}
+  .dock a:hover{background:var(--tint);color:var(--fg);text-decoration:underline;text-underline-offset:4px}
+  .dock a.p{background:var(--btn);color:var(--btn-ink)}
+  .dock a.p:hover{background:var(--btn-hover)}
+  body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  footer.bottom .wrap{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:560px){
+  .band{--pad:clamp(48px,12vw,64px)}
+  .pkg-list li{grid-template-columns:minmax(0,1fr)}
+  .pkg-list .pr{justify-content:space-between}
+  .paylist>div{grid-template-columns:minmax(0,1fr)}
+  .f2{grid-template-columns:minmax(0,1fr)}
+  .visit li{grid-template-columns:36px minmax(0,1fr)}
+  details p{padding-right:0}
+  .cta .btn{width:100%}
+  .acts .btn{flex:1 1 100%}
+}
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2fd1a0"/><stop offset="1" stop-color="#0b7a5d"/></linearGradient>
+    <symbol id="logo" viewBox="0 0 48 48"><g transform="scale(.75)"><rect width="64" height="64" rx="17" fill="url(#lg)"/>
+<g transform="rotate(38 32 33)"><rect x="30.4" y="7" width="3.2" height="26" rx="1.6" fill="#fff"/><path d="M24.5 31h15a3 3 0 0 1 3 3v4h-21v-4a3 3 0 0 1 3-3z" fill="#ffb020"/><path d="M22 38h20l4 17H18z" fill="#fff"/><path d="M27 42v10M32 42v11M37 42v10" stroke="#8fdcc2" stroke-width="1.7" stroke-linecap="round"/></g>
+<path d="M17 10.5Q17 17 10.5 17Q17 17 17 23.5Q17 17 23.5 17Q17 17 17 10.5Z" fill="#fff"/>
+<path d="M48 42.500Q48 48 42.500 48Q48 48 48 53.500Q48 48 53.500 48Q48 48 48 42.500Z" fill="#ffd60a"/>
+<circle cx="10" cy="34" r="1.8" fill="#fff"/><circle cx="52" cy="26" r="1.6" fill="#fff" opacity=".85"/></g></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="#atas" aria-label="KlinPasta Keliling, kembali ke atas">
+      <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#logo"/></svg>
+      <span class="w"><b>Klin<i>Pasta</i></b><small>Keliling</small></span>
+    </a>
+    <nav class="topnav" aria-label="Menu utama">
+      <a href="#layanan">Layanan</a>
+      <a href="#cara">Cara kerja</a>
+      <a href="#area">Area</a>
+      <a href="#faq">Tanya jawab</a>
+      <a class="btn sm" href="#pesan">Pesan</a>
+    </nav>
+  </div>
+</header>
+
+<main id="atas">
+
+  <section class="hero" aria-labelledby="judul">
+    <div class="wrap">
+      <h1 id="judul">Laptop, PC, dan konsol panas? <span>Teknisi datang ke rumah.</span></h1>
+      <div class="hero-row">
+        <div>
+          <p class="lead">Bersih debu dan ganti thermal paste langsung di rumah Anda di Purwokerto. Tanpa antre, tanpa membawa perangkat ke toko. Pengerjaan sekitar 60 sampai 90 menit.</p>
+          <div class="cta">
+            <a class="btn" href="#pesan">Pesan teknisi</a>
+            <a class="tlink" href="#layanan">Lihat paket dan harga</a>
+          </div>
+        </div>
+        <ul class="facts">
+          <li>Garansi layanan 7 hari</li>
+          <li>Harga jelas sebelum teknisi mulai</li>
+          <li>Perangkat tidak dibawa pergi</li>
+        </ul>
+      </div>
+
+      <div class="panel deep">
+        <h2>Di dalam laptop Anda, panas lewat satu lapisan tipis.</h2>
+        <p class="lead">Pasta termal mengisi celah mikro antara prosesor dan heatsink. Kalau pasta mengering, panas tertahan di tengah.</p>
+        <div class="panel-grid">
+          <figure class="art" id="art">
+            <svg class="art-svg" viewBox="0 0 760 640" width="760" height="640" role="img" aria-labelledby="art-t art-d">
+              <title id="art-t">Tampilan terurai tiga lapisan pendingin prosesor</title>
+              <desc id="art-d">Dari atas ke bawah: heatsink bersirip, lapisan tipis pasta termal berwarna kuning, dan prosesor.</desc>
+              <line class="axis" x1="330" y1="30" x2="330" y2="570"/>
+              <g class="l3">
+                <polygon class="lf" points="218,470 330,526 330,544 218,488"/>
+                <polygon class="rt" points="330,526 442,470 442,488 330,544"/>
+                <polygon class="t" points="330,414 442,470 330,526 218,470"/>
+                <polygon class="die" points="330,444 382,470 330,496 278,470"/>
+              </g>
+              <g class="l2">
+                <polygon class="lf" points="218,330 330,386 330,392 218,336"/>
+                <polygon class="rt" points="330,386 442,330 442,336 330,392"/>
+                <polygon class="t" points="330,274 442,330 330,386 218,330"/>
+              </g>
+              <g class="l1">
+                <polygon class="lf" points="160,120 330,205 330,239 160,154"/>
+                <polygon class="rt" points="330,205 500,120 500,154 330,239"/>
+                <polygon class="t" points="330,35 500,120 330,205 160,120"/>
+                <path class="fin" d="M194 103L364 188M228 86L398 171M262 69L432 154M296 52L466 137"/>
+              </g>
+              <g class="mk">
+                <g><line class="lead-line" x1="500" y1="137" x2="598" y2="137"/><circle cx="628" cy="137" r="22"/><text x="628" y="146">1</text></g>
+                <g class="hot"><line class="lead-line" x1="442" y1="333" x2="598" y2="333"/><circle cx="628" cy="333" r="22"/><text x="628" y="342">2</text></g>
+                <g><line class="lead-line" x1="442" y1="479" x2="598" y2="479"/><circle cx="628" cy="479" r="22"/><text x="628" y="488">3</text></g>
+              </g>
+            </svg>
+          </figure>
+          <ol class="parts">
+            <li><div><b>Heatsink dan kipas</b><span>Membuang panas keluar dari bodi. Debu yang menumpuk di sirip menghambat aliran udara.</span></div></li>
+            <li class="hot"><div><b>Pasta termal</b><span>Lapisan tipis yang menghantar panas dari prosesor ke heatsink. Pasta kering membuat panas tertahan di sini. Lapisan inilah yang kami ganti.</span></div></li>
+            <li><div><b>Prosesor</b><span>Sumber panas. Kalau panas tidak bisa keluar, kipas menderu dan perangkat melambat.</span></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="layanan" aria-labelledby="t-layanan" style="--pad:clamp(56px,8vw,96px)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2 id="t-layanan">Pilih paket yang pas.</h2>
+        <p class="lead">Semua paket dikerjakan di rumah Anda. Biaya datang Rp10.000 untuk area Purwokerto ditambahkan saat pemesanan.</p>
+      </div>
+
+      <div class="pkgs rv">
+        <article class="pkg-main deep" aria-labelledby="p-lengkap">
+          <p class="kicker">Bersih dan repasta sekaligus</p>
+          <h3 id="p-lengkap">Paket Lengkap</h3>
+          <p class="price num">Rp175.000</p>
+          <ul>
+            <li>Bersih menyeluruh dan ganti pasta</li>
+            <li>Cek kesehatan perangkat</li>
+            <li>Garansi layanan 7 hari</li>
+          </ul>
+          <p class="save">Kalau Paket Bersih dan Paket Repasta dipesan terpisah, totalnya Rp200.000. Paket Lengkap lebih hemat Rp25.000.</p>
+          <a class="btn" href="#pesan" data-pick="lengkap">Pilih Paket Lengkap</a>
+        </article>
+
+        <ul class="pkg-list" aria-label="Paket lainnya">
+          <li>
+            <div><h3>Paket Bersih</h3><p>Bersih debu kipas dan ventilasi, bersih keyboard dan bodi, cek suhu dasar.</p></div>
+            <div class="pr"><span class="price num">Rp75.000</span><a class="btn ghost sm" href="#pesan" data-pick="bersih">Pilih<span class="sr-only"> Paket Bersih</span></a></div>
+          </li>
+          <li>
+            <div><h3>Paket Repasta</h3><p>Ganti thermal paste CPU atau GPU, cek suhu sebelum dan sesudah.</p></div>
+            <div class="pr"><span class="price num">Rp125.000</span><a class="btn ghost sm" href="#pesan" data-pick="repasta">Pilih<span class="sr-only"> Paket Repasta</span></a></div>
+          </li>
+          <li>
+            <div><h3>Paket Konsol Game</h3><p>Bersih dan repasta PS4, PS5, atau Xbox. Kipas lebih senyap, suhu turun. Teknisi mempelajari model Anda dulu.</p></div>
+            <div class="pr"><span class="price num">Rp200.000</span><a class="btn ghost sm" href="#pesan" data-pick="konsol">Pilih<span class="sr-only"> Paket Konsol Game</span></a></div>
+          </li>
+        </ul>
+      </div>
+      <p class="note">Harga di atas adalah harga awal untuk prototipe layanan dan dapat berubah sesuai tipe perangkat. Teknisi mengonfirmasi harga final sebelum mulai.</p>
+
+      <div class="pay rv" id="bayar">
+        <h3>Cara bayar</h3>
+        <dl class="paylist">
+          <div><dt>Cash</dt><dd>Dibayar langsung ke teknisi.</dd></div>
+          <div><dt>QRIS</dt><dd>Lewat DM Instagram admin @klinpastapwt. Admin mengirim kode QRIS.</dd></div>
+          <div><dt>Transfer e-wallet</dt><dd>Lewat DM Instagram admin @klinpastapwt. Admin mengirim tujuan transfer.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="band tint" id="cara" aria-labelledby="t-cara" style="--pad:clamp(64px,10vw,120px)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2 id="t-cara">Dari DM sampai perangkat dingin lagi.</h2>
+        <p class="lead">Anda memesan lewat Instagram, teknisi mengerjakan di rumah Anda.</p>
+      </div>
+      <div class="how">
+        <div class="rv">
+          <h3>Sebelum teknisi datang</h3>
+          <p class="muted">Isi form di bawah, salin pesannya, lalu kirim ke admin @klinpastapwt. Admin membalas untuk konfirmasi jadwal dan harga.</p>
+          <div class="chat" role="img" aria-label="Contoh percakapan pemesanan di Instagram DM antara pelanggan dan admin">
+            <small>Contoh percakapan di DM</small>
+            <div class="bub out">Halo admin, laptop saya panas dan kipasnya berisik. Bisa servis di rumah?</div>
+            <div class="bub in">Bisa! Kirim tipe laptop, alamat, dan jadwal yang diinginkan ya.</div>
+            <div class="bub out">ASUS TUF F15, Purwokerto Timur, besok jam 10.</div>
+            <div class="bub in">Siap, Paket Lengkap Rp185.000 sudah termasuk biaya datang. Cash bayar ke teknisi saat datang. QRIS atau transfer e-wallet bayar lewat DM ini.</div>
+          </div>
+        </div>
+        <div class="rv">
+          <h3>Saat teknisi di rumah Anda</h3>
+          <p class="muted">Langkahnya menyesuaikan paket yang Anda pilih.</p>
+          <ol class="visit">
+            <li><div><b>Cek suhu awal</b><span>Teknisi mengecek suhu perangkat sebelum dibongkar.</span></div></li>
+            <li><div><b>Bongkar dan bersihkan</b><span>Debu di kipas dan ventilasi dibersihkan.</span></div></li>
+            <li><div><b>Ganti pasta</b><span>Thermal paste lama diganti di depan Anda, untuk paket yang memuat repasta.</span></div></li>
+            <li><div><b>Rakit kembali dan tes</b><span>Perangkat dirakit lagi, lalu dites.</span></div></li>
+            <li><div><b>Garansi layanan 7 hari</b><span>Kalau ada kendala setelah servis, segera lapor ke CS.</span></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band deep" aria-labelledby="t-manfaat" style="--pad:clamp(72px,12vw,144px)">
+    <div class="wrap">
+      <h2 class="big rv" id="t-manfaat">Perangkat Anda tidak pernah keluar dari rumah.</h2>
+      <div class="ben">
+        <div class="rv"><h3>Hemat waktu</h3><p>Tidak perlu mengantre atau mengantar perangkat ke tempat servis. Anda tetap bisa bekerja atau belajar.</p></div>
+        <div class="rv"><h3>Bisa Anda awasi</h3><p>Perangkat tetap di depan Anda, jadi seluruh pengerjaan bisa dilihat dari awal sampai selesai.</p></div>
+        <div class="rv"><h3>Harga jelas</h3><p>Harga paket ditampilkan terbuka dan dikonfirmasi sebelum teknisi mulai bekerja.</p></div>
+        <div class="rv"><h3>Lebih senyap</h3><p>Suhu yang turun membantu perangkat tidak lemot dan tidak mati sendiri, dan kipas tidak terus meraung.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="area" aria-labelledby="t-area" style="--pad:clamp(56px,8vw,88px)">
+    <div class="wrap area">
+      <div class="rv">
+        <h2 id="t-area">Khusus Purwokerto.</h2>
+        <p class="lead">Saat ini kami hanya melayani wilayah Purwokerto. Di luar area itu, tanyakan dulu ke admin.</p>
+        <ul class="kec" aria-label="Kecamatan yang dilayani">
+          <li>Purwokerto Barat</li><li>Purwokerto Timur</li><li>Purwokerto Utara</li><li>Purwokerto Selatan</li>
+        </ul>
+      </div>
+      <div class="care rv">
+        <h3>Kapan perangkat perlu dirawat?</h3>
+        <p class="fact"><b>Tiap 6 bulan</b>untuk bersih debu.</p>
+        <p class="fact"><b>Tiap 1 sampai 3 tahun</b>untuk ganti thermal paste pada laptop.</p>
+        <p class="note">Ini patokan umum. Laptop gaming dan perangkat yang sering dipakai berat bisa lebih cepat.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band tint" id="faq" aria-labelledby="t-faq" style="--pad:clamp(56px,8vw,96px)">
+    <div class="wrap faq-wrap">
+      <h2 id="t-faq" class="rv">Hal yang sering ditanyakan.</h2>
+      <div class="faq rv">
+        <details><summary>Berapa lama thermal paste bertahan?</summary><p>Pasta di perangkat umumnya perlu diganti tiap 1 sampai 3 tahun untuk laptop, dan 3 sampai 5 tahun untuk PC desktop pemakaian ringan. Pemakaian berat atau suhu tinggi membuatnya lebih cepat kering.</p></details>
+        <details><summary>Apa tanda perangkat perlu repasta?</summary><p>Suhu naik dibanding biasanya, kipas terdengar lebih kencang, perangkat lemot atau mati sendiri saat dipakai berat.</p></details>
+        <details><summary>Apakah garansi perangkat saya hangus?</summary><p>Sebagian perangkat baru memakai segel garansi. Sebelum membongkar, teknisi mengecek segel dan meminta persetujuan Anda lewat chat.</p></details>
+        <details><summary>Konsol apa saja yang dilayani?</summary><p>PS4, PS5, dan Xbox. Setiap model punya cara bongkar sendiri, jadi sebutkan tipe persisnya saat memesan agar teknisi bisa menyiapkan diri.</p></details>
+        <details><summary>Bagaimana cara membayar?</summary><p>Bisa dengan cash, QRIS, atau transfer e-wallet. Cash dibayar langsung ke teknisi. QRIS dan transfer e-wallet dibayar melalui Instagram admin @klinpastapwt, jadi hubungi admin untuk mendapatkan kode QRIS atau tujuan transfer.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="pesan" aria-labelledby="t-pesan" style="--pad:clamp(56px,8vw,104px)">
+    <div class="wrap">
+      <div class="sec-head rv">
+        <h2 id="t-pesan">Isi data, kirim ke admin.</h2>
+        <p class="lead">Form ini menyusun pesan pemesanan. Salin pesannya, lalu kirim lewat DM Instagram @klinpastapwt. Pesanan baru sah setelah admin membalas dan mengonfirmasi.</p>
+      </div>
+      <div class="order">
+        <form id="f" novalidate aria-label="Form pemesanan">
+          <noscript><p>Form ini membutuhkan JavaScript. Kirim DM langsung ke @klinpastapwt di Instagram.</p></noscript>
+          <fieldset class="fld">
+            <legend>Perangkat</legend>
+            <div class="seg">
+              <button type="button" data-v="laptop" aria-pressed="true">Laptop</button>
+              <button type="button" data-v="pc" aria-pressed="false">PC</button>
+              <button type="button" data-v="konsol" aria-pressed="false">Konsol</button>
+            </div>
+          </fieldset>
+          <div class="fld"><label for="svc">Layanan</label><select id="svc"></select></div>
+          <div class="fld">
+            <label for="model">Merek dan tipe perangkat</label>
+            <input id="model" autocomplete="off" placeholder="Contoh: ASUS TUF F15" aria-describedby="h-model e-model">
+            <p class="hint" id="h-model">Tulis setepat mungkin agar teknisi bisa menyiapkan alat dan pasta. Untuk konsol, contohnya PS5 Slim.</p>
+            <p class="err" id="e-model" hidden></p>
+          </div>
+          <div class="f2">
+            <div class="fld"><label for="nama">Nama</label><input id="nama" autocomplete="name" placeholder="Nama Anda" aria-describedby="e-nama"><p class="err" id="e-nama" hidden></p></div>
+            <div class="fld"><label for="wa">Nomor WhatsApp</label><input id="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" aria-describedby="e-wa"><p class="err" id="e-wa" hidden></p></div>
+          </div>
+          <div class="fld">
+            <label for="kec">Kecamatan</label>
+            <select id="kec"><option>Purwokerto Barat</option><option>Purwokerto Timur</option><option>Purwokerto Utara</option><option>Purwokerto Selatan</option><option value="lain">Lainnya (tanya admin dulu)</option></select>
+            <p class="warn" id="warn" role="status"></p>
+          </div>
+          <div class="fld"><label for="alamat">Alamat lengkap</label><textarea id="alamat" rows="2" autocomplete="street-address" placeholder="Jalan, nomor, patokan" aria-describedby="e-alamat"></textarea><p class="err" id="e-alamat" hidden></p></div>
+          <div class="f2">
+            <div class="fld"><label for="tgl">Tanggal kunjungan</label><input id="tgl" type="date" aria-describedby="e-tgl"><p class="err" id="e-tgl" hidden></p></div>
+            <div class="fld"><label for="jam">Jam</label><select id="jam"><option>09.00</option><option>10.00</option><option>11.00</option><option>13.00</option><option>14.00</option><option>15.00</option><option>16.00</option><option>17.00</option></select></div>
+          </div>
+          <div class="fld">
+            <label for="bayar-m">Metode pembayaran</label>
+            <select id="bayar-m" aria-describedby="h-bayar"><option>Cash</option><option>QRIS</option><option>Transfer e-wallet</option></select>
+            <p class="hint" id="h-bayar">Cash dibayar ke teknisi. QRIS dan e-wallet lewat Instagram admin @klinpastapwt.</p>
+          </div>
+          <div class="fld" style="margin-bottom:0"><label for="cat">Keluhan (opsional)</label><input id="cat" autocomplete="off" placeholder="Contoh: cepat panas, kipas berisik"></div>
+        </form>
+
+        <div class="sumcard">
+          <h3>Ringkasan biaya</h3>
+          <div class="line"><span id="sname">Paket Lengkap</span><span class="num" id="sprice">Rp175.000</span></div>
+          <div class="line"><span>Biaya datang (Purwokerto)</span><span class="num">Rp10.000</span></div>
+          <div class="line total"><span>Total</span><span class="num" id="stotal">Rp185.000</span></div>
+          <div class="out-wrap">
+            <label for="msg">Pesan untuk dikirim</label>
+            <div class="out-bubble"><textarea id="msg" readonly rows="12"></textarea></div>
+          </div>
+          <p class="fill-hint" id="fill-hint"></p>
+          <div class="acts">
+            <button class="btn" type="button" id="copy">Salin pesan</button>
+            <a class="btn ghost" href="https://www.instagram.com/klinpastapwt?lqvp=MWQxYnRyY2Fqa3p3MA==" target="_blank" rel="noopener noreferrer">Buka Instagram<span class="sr-only"> (tab baru)</span></a>
+          </div>
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+          <p class="hint">Instagram tidak bisa mengisi DM otomatis. Tempel pesan yang sudah disalin ke kolom DM @klinpastapwt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band deep contact" aria-labelledby="t-kontak">
+    <div class="wrap">
+      <div>
+        <h2 id="t-kontak">Hubungi admin.</h2>
+        <p class="lead muted">Pertanyaan, jadwal, pembayaran QRIS atau e-wallet, atau tipe perangkat yang belum ada di daftar? Semuanya lewat DM ke akun kami.</p>
+        <p class="handle"><a href="https://www.instagram.com/klinpastapwt?lqvp=MWQxYnRyY2Fqa3p3MA==" target="_blank" rel="noopener noreferrer">@klinpastapwt<span class="sr-only"> (tab baru)</span></a></p>
+      </div>
+      <a class="btn" href="https://www.instagram.com/klinpastapwt?lqvp=MWQxYnRyY2Fqa3p3MA==" target="_blank" rel="noopener noreferrer">Kirim DM di Instagram<span class="sr-only"> (tab baru)</span></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="bottom">
+  <div class="wrap">
+    <span class="brand"><svg viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#logo"/></svg>KlinPasta Keliling. Dingin. Bersih. Ngebut. Area Purwokerto.</span>
+  </div>
+</footer>
+
+<nav class="dock" aria-label="Menu bawah">
+  <a href="#layanan">Layanan</a>
+  <a href="#cara">Cara kerja</a>
+  <a href="#area">Area</a>
+  <a class="p" href="#pesan">Pesan</a>
+</nav>
+
+<script>
+(function(){
+  'use strict';
+  var PK={
+    bersih:{n:'Paket Bersih',p:75000},
+    repasta:{n:'Paket Repasta',p:125000},
+    lengkap:{n:'Paket Lengkap',p:175000},
+    konsol:{n:'Paket Konsol Game',p:200000}
+  };
+  var DATANG=10000;
+  var DEVNAME={laptop:'Laptop',pc:'PC desktop',konsol:'Konsol game'};
+  var $=function(id){return document.getElementById(id)};
+  var f=$('f');
+  if(!f){return}
+  var state={dev:'laptop',attempted:false};
+  var segs=[].slice.call(document.querySelectorAll('.seg button'));
+  var svc=$('svc'),kec=$('kec'),statusEl=$('status'),copyBtn=$('copy');
+
+  function rp(n){return 'Rp'+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+  function pad(n){return String(n).padStart(2,'0')}
+  var t=new Date();t.setDate(t.getDate()+1);
+  var minIso=t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());
+  $('tgl').min=minIso;$('tgl').value=minIso;
+
+  function keysFor(dev){return dev==='konsol'?['konsol']:['bersih','repasta','lengkap']}
+  function fillSvc(keep){
+    var keys=keysFor(state.dev);
+    svc.innerHTML='';
+    keys.forEach(function(k){
+      var o=document.createElement('option');
+      o.value=k;o.textContent=PK[k].n+' ('+rp(PK[k].p)+')';
+      svc.appendChild(o);
+    });
+    svc.value=keys.indexOf(keep)>-1?keep:(keys.indexOf('lengkap')>-1?'lengkap':keys[0]);
+  }
+  function tglText(v){
+    if(!v){return '(belum dipilih)'}
+    var d=new Date(v+'T00:00:00');
+    try{return d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return v}
+  }
+
+  var FIELDS=[
+    {id:'model',label:'merek dan tipe perangkat',ok:function(v){return v.trim().length>=2},msg:'Tulis merek dan tipe perangkat, misalnya ASUS TUF F15.'},
+    {id:'nama',label:'nama',ok:function(v){return v.trim().length>=2},msg:'Tulis nama Anda.'},
+    {id:'wa',label:'nomor WhatsApp',ok:function(v){return /^(\+62|62|0)8\d{7,12}$/.test(v.replace(/[\s-]/g,''))},msg:'Nomor WhatsApp belum valid. Contoh: 081234567890.'},
+    {id:'alamat',label:'alamat lengkap',ok:function(v){return v.trim().length>=8},msg:'Tulis alamat lengkap beserta patokan.'},
+    {id:'tgl',label:'tanggal kunjungan',ok:function(v){return !!v&&v>=minIso},msg:'Pilih tanggal kunjungan mulai besok.'}
+  ];
+  function missing(){return FIELDS.filter(function(x){return !x.ok($(x.id).value)})}
+  function showErr(fl,bad){
+    var input=$(fl.id),er=$('e-'+fl.id);
+    if(bad){input.setAttribute('aria-invalid','true');er.textContent=fl.msg;er.hidden=false}
+    else{input.removeAttribute('aria-invalid');er.textContent='';er.hidden=true}
+  }
+  function setStatus(text,isErr){
+    statusEl.textContent=text||'';
+    statusEl.classList.toggle('is-err',!!isErr);
+  }
+
+  function render(){
+    var p=PK[svc.value];
+    segs.forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===state.dev?'true':'false')});
+    $('sname').textContent=p.n;$('sprice').textContent=rp(p.p);$('stotal').textContent=rp(p.p+DATANG);
+    var out=kec.value==='lain';
+    $('warn').textContent=out?'Layanan kami hanya di area Purwokerto. Tanyakan ke admin apakah lokasi Anda bisa dilayani.':'';
+    var v=function(id){return $(id).value};
+    var L=[
+      'Halo admin KlinPasta Keliling, saya mau pesan servis di rumah.','',
+      'Nama: '+(v('nama')||'-'),
+      'Kontak WA: '+(v('wa')||'-'),
+      'Perangkat: '+DEVNAME[state.dev]+(v('model').trim()?' - '+v('model').trim():' (tipe belum diisi)'),
+      'Layanan: '+p.n+' ('+rp(p.p)+')',
+      'Wilayah: '+(out?'Di luar 4 kecamatan Purwokerto (mohon dicek)':kec.value),
+      'Alamat: '+(v('alamat')||'-'),
+      'Jadwal: '+tglText(v('tgl'))+', pukul '+v('jam')+' WIB',
+      'Pembayaran: '+v('bayar-m')+(v('bayar-m')==='Cash'?' (bayar ke teknisi)':' (via IG admin)'),
+      'Keluhan: '+(v('cat')||'-'),
+      'Estimasi total: '+rp(p.p+DATANG)+' (termasuk biaya datang)','',
+      'Mohon konfirmasi jadwal dan harga. Terima kasih.'
+    ];
+    var ta=$('msg');
+    ta.value=L.join('\n');
+    ta.style.height='auto';ta.style.height=ta.scrollHeight+'px';
+    var m=missing();
+    $('fill-hint').textContent=m.length
+      ?'Belum lengkap: '+m.map(function(x){return x.label}).join(', ')+'. Isi dulu agar pesan siap disalin.'
+      :'Data lengkap. Pesan siap disalin.';
+    if(state.attempted){FIELDS.forEach(function(fl){showErr(fl,!fl.ok($(fl.id).value))})}
+  }
+
+  segs.forEach(function(b){
+    b.addEventListener('click',function(){state.dev=b.getAttribute('data-v');fillSvc();setStatus('');render()});
+  });
+  f.addEventListener('input',function(){setStatus('');render()});
+  f.addEventListener('change',function(){setStatus('');render()});
+  f.addEventListener('submit',function(e){e.preventDefault()});
+
+  [].forEach.call(document.querySelectorAll('[data-pick]'),function(a){
+    a.addEventListener('click',function(){
+      var k=a.getAttribute('data-pick');
+      state.dev=k==='konsol'?'konsol':(state.dev==='konsol'?'laptop':state.dev);
+      fillSvc(k);setStatus('');render();
+    });
+  });
+
+  copyBtn.addEventListener('click',function(){
+    state.attempted=true;render();
+    var m=missing();
+    if(m.length){
+      setStatus('Belum bisa disalin. Lengkapi: '+m.map(function(x){return x.label}).join(', ')+'.',true);
+      $(m[0].id).focus();
+      return;
+    }
+    var ta=$('msg');
+    function fallback(){ta.focus();ta.select();setStatus('Salin otomatis tidak tersedia di sini. Pesan sudah terpilih: tekan Ctrl+C, lalu tempel di DM Instagram.',true)}
+    function done(){
+      setStatus('Pesan tersalin. Tempel di DM Instagram @klinpastapwt.');
+      copyBtn.textContent='Tersalin';
+      setTimeout(function(){copyBtn.textContent='Salin pesan'},2200);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(ta.value).then(done,fallback)}
+    else{fallback()}
+  });
+
+  /* dock bawah disembunyikan saat mengetik agar tidak menutupi kolom */
+  document.addEventListener('focusin',function(e){if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)){document.body.classList.add('typing')}});
+  document.addEventListener('focusout',function(){document.body.classList.remove('typing')});
+
+  fillSvc('lengkap');render();
+})();
+
+(function(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* diagram hero terurai sekali setelah dimuat */
+  var art=document.getElementById('art');
+  if(art){
+    if(reduce){art.classList.add('go')}
+    else{requestAnimationFrame(function(){requestAnimationFrame(function(){art.classList.add('go')})})}
+  }
+
+  /* blok besar muncul pelan saat discroll */
+  var els=[].slice.call(document.querySelectorAll('.rv'));
+  if(reduce||!('IntersectionObserver' in window)){
+    els.forEach(function(e){e.classList.add('shown')});
+  }else{
+    var io=new IntersectionObserver(function(list){
+      list.forEach(function(en){
+        if(en.isIntersecting){en.target.classList.add('shown');io.unobserve(en.target)}
+      });
+    },{threshold:.08,rootMargin:'0px 0px -4% 0px'});
+    els.forEach(function(e){io.observe(e)});
+  }
+})();
+</script>
+</body>
+</html>
